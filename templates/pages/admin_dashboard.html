@@ -1,0 +1,441 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-4" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  <h2 class="text-center mb-4">Analytics Dashboard</h2>
+
+  <!-- Filters for Main Chart -->
+  <div class="mb-4">
+    <label for="x-axis">Select X-axis:</label>
+    <select id="x-axis" class="form-control">
+        <option value="age">Age</option>
+        <option value="sex">Gender</option>
+        <option value="place">Location</option>
+        <option value="qualification">Education</option>
+        <option value="marital_status">Marital Status</option>
+        <option value="no_of_children">No. of Children</option>
+    </select>
+
+    <label for="y-axis" class="mt-3">Select Y-axis:</label>
+    <select id="y-axis" class="form-control">
+        <option value="hesitancy_score" selected>Hesitancy Score</option>
+        <option value="predicted_hesitancy">Predicted Hesitancy</option>
+    </select>
+  </div>
+
+  <!-- Main Chart -->
+<div class="d-flex justify-content-center" style="width:600px; height:300px;">
+  <canvas id="myChart" width="600" height="300"></canvas>
+</div>
+
+  <!-- Question vs. Demographic Analysis (Bar Chart) -->
+  <div class="mt-5">
+    <h3 class="text-center">Question vs. Demographic Analysis (Bar Chart)</h3>
+    <label for="questionSelect">Select Question:</label>
+    <select id="questionSelect" class="form-control">
+        <!-- All 30 questions with full text -->
+        <option value="question1">1. Do you agree COVID-19 is an infection/disease?</option>
+        <option value="question2">2. Do you agree that COVID-19 can be prevented by administering a vaccine?</option>
+        <option value="question3">3. Do you agree that your information about COVID-19 is accurate?</option>
+        <option value="question4">4. Do you agree that not only COVID-19 but many other infections are vaccine-preventable?</option>
+        <option value="question5">5. Do you agree that healthy persons do not need any vaccine for any infection including COVID-19?</option>
+        <option value="question6">6. Do you agree that you can be administered with multiple vaccines to increase your immunity?</option>
+        <option value="question7">7. Do you agree all the vaccine brands available for COVID-19 work the same?</option>
+        <option value="question8">8. Do you agree that COVID-19 vaccination can be associated with the risk of side effects?</option>
+        <option value="question9">9. Do you agree that touching, sharing food, and talking can be reasons for the transmission of the COVID virus?</option>
+        <option value="question10">10. Do you agree that a non-vaccinated person is more at risk than a vaccinated person?</option>
+        <option value="question11">11. Do you agree with the government COVID-19 vaccine program?</option>
+        <option value="question12">12. Do you agree to take the COVID-19 vaccine including the booster?</option>
+        <option value="question13">13. Do you agree that the COVID vaccine will strengthen the immune system?</option>
+        <option value="question14">14. Are you willing to vaccinate your elderly and children?</option>
+        <option value="question15">15. If under any COVID-like pandemic, the nation experiences a growing recovery rate, will you agree to take the COVID-19 vaccine?</option>
+        <option value="question16">16. The available vaccines are safe and effective.</option>
+        <option value="question17">17. The COVID vaccine rumors are true.</option>
+        <option value="question18">18. Do you want to volunteer for the clinical trials of new vaccines?</option>
+        <option value="question19">19. Do the side effects of the vaccine resist you from taking the vaccines?</option>
+        <option value="question20">20. Should vaccination be mandatory?</option>
+        <option value="question21">21. Do you believe in the steps taken by the Ministry of Health about the vaccination process?</option>
+        <option value="question22">22. Is the best preventive measure against COVID-19 vaccination?</option>
+        <option value="question23">23. Is vaccination prohibited in your religion?</option>
+        <option value="question24">24. Can eating supplements help prevent coronavirus infection, hence no need for a vaccine?</option>
+        <option value="question25">25. Is COVID-19 not a virus but a bioweapon?</option>
+        <option value="question26">26. Can coronavirus be treated without medication?</option>
+        <option value="question27">27. Does a coronavirus-infected person not need to quarantine themselves?</option>
+        <option value="question28">28. Is the vaccination process a business for the government?</option>
+        <option value="question29">29. Does the use of masks/disinfectants help prevent COVID-19 infection, but still, a vaccine is important?</option>
+        <option value="question30">30. Once a patient recovers from COVID-19, does that mean they do not need vaccination to prevent subsequent infection?</option>
+    </select>
+
+    <label for="demographicSelect" class="mt-3">Select Demographic:</label>
+    <select id="demographicSelect" class="form-control">
+        <option value="age">Age</option>
+        <option value="sex">Gender</option>
+        <option value="place">Location</option>
+        <option value="qualification">Education</option>
+        <option value="marital_status">Marital Status</option>
+        <option value="no_of_children">No. of Children</option>
+    </select>
+    <button id="plotQuestionBtn" class="btn btn-primary mt-3">Plot Bar Chart</button>
+  </div>
+  <div class="d-flex justify-content-center" style="width:600px; height:300px;">
+  <canvas id="questionChart" width="600" height="300"></canvas>
+</div>
+
+  <!-- Correlation Graph (Scatter Plot) -->
+  <div class="mt-5">
+    <h3 class="text-center">Correlation: Hesitancy Score vs. Specific Answers</h3>
+    <label for="corrQuestionSelect">Select Question:</label>
+    <select id="corrQuestionSelect" class="form-control">
+        <!-- All 30 questions with full text -->
+        <option value="question1">1. Do you agree COVID-19 is an infection/disease?</option>
+        <option value="question2">2. Do you agree that COVID-19 can be prevented by administering a vaccine?</option>
+        <option value="question3">3. Do you agree that your information about COVID-19 is accurate?</option>
+        <option value="question4">4. Do you agree that not only COVID-19 but many other infections are vaccine-preventable?</option>
+        <option value="question5">5. Do you agree that healthy persons do not need any vaccine for any infection including COVID-19?</option>
+        <option value="question6">6. Do you agree that you can be administered with multiple vaccines to increase your immunity?</option>
+        <option value="question7">7. Do you agree all the vaccine brands available for COVID-19 work the same?</option>
+        <option value="question8">8. Do you agree that COVID-19 vaccination can be associated with the risk of side effects?</option>
+        <option value="question9">9. Do you agree that touching, sharing food, and talking can be reasons for the transmission of the COVID virus?</option>
+        <option value="question10">10. Do you agree that a non-vaccinated person is more at risk than a vaccinated person?</option>
+        <option value="question11">11. Do you agree with the government COVID-19 vaccine program?</option>
+        <option value="question12">12. Do you agree to take the COVID-19 vaccine including the booster?</option>
+        <option value="question13">13. Do you agree that the COVID vaccine will strengthen the immune system?</option>
+        <option value="question14">14. Are you willing to vaccinate your elderly and children?</option>
+        <option value="question15">15. If under any COVID-like pandemic, the nation experiences a growing recovery rate, will you agree to take the COVID-19 vaccine?</option>
+        <option value="question16">16. The available vaccines are safe and effective.</option>
+        <option value="question17">17. The COVID vaccine rumors are true.</option>
+        <option value="question18">18. Do you want to volunteer for the clinical trials of new vaccines?</option>
+        <option value="question19">19. Do the side effects of the vaccine resist you from taking the vaccines?</option>
+        <option value="question20">20. Should vaccination be mandatory?</option>
+        <option value="question21">21. Do you believe in the steps taken by the Ministry of Health about the vaccination process?</option>
+        <option value="question22">22. Is the best preventive measure against COVID-19 vaccination?</option>
+        <option value="question23">23. Is vaccination prohibited in your religion?</option>
+        <option value="question24">24. Can eating supplements help prevent coronavirus infection, hence no need for a vaccine?</option>
+        <option value="question25">25. Is COVID-19 not a virus but a bioweapon?</option>
+        <option value="question26">26. Can coronavirus be treated without medication?</option>
+        <option value="question27">27. Does a coronavirus-infected person not need to quarantine themselves?</option>
+        <option value="question28">28. Is the vaccination process a business for the government?</option>
+        <option value="question29">29. Does the use of masks/disinfectants help prevent COVID-19 infection, but still, a vaccine is important?</option>
+        <option value="question30">30. Once a patient recovers from COVID-19, does that mean they do not need vaccination to prevent subsequent infection?</option>
+    </select>
+    <button id="plotCorrelationBtn" class="btn btn-primary mt-3">Plot Correlation Graph</button>
+  </div>
+<div class="d-flex justify-content-center" style="width:600px; height:300px;">
+  <canvas id="correlationChart" width="600" height="300"></canvas>
+</div>
+
+  <!-- Pie Chart for Survey Responses -->
+  <div class="mt-5">
+    <h3 class="text-center">Pie Chart: Distribution of Survey Responses</h3>
+    <label for="pieQuestionSelect">Select Question:</label>
+    <select id="pieQuestionSelect" class="form-control">
+        <option value="question1">1. Do you agree COVID-19 is an infection/disease?</option>
+        <option value="question2">2. Do you agree that COVID-19 can be prevented by administering a vaccine?</option>
+        <option value="question3">3. Do you agree that your information about COVID-19 is accurate?</option>
+        <option value="question4">4. Do you agree that not only COVID-19 but many other infections are vaccine-preventable?</option>
+        <option value="question5">5. Do you agree that healthy persons do not need any vaccine for any infection including COVID-19?</option>
+        <option value="question6">6. Do you agree that you can be administered with multiple vaccines to increase your immunity?</option>
+        <option value="question7">7. Do you agree all the vaccine brands available for COVID-19 work the same?</option>
+        <option value="question8">8. Do you agree that COVID-19 vaccination can be associated with the risk of side effects?</option>
+        <option value="question9">9. Do you agree that touching, sharing food, and talking can be reasons for the transmission of the COVID virus?</option>
+        <option value="question10">10. Do you agree that a non-vaccinated person is more at risk than a vaccinated person?</option>
+        <option value="question11">11. Do you agree with the government COVID-19 vaccine program?</option>
+        <option value="question12">12. Do you agree to take the COVID-19 vaccine including the booster?</option>
+        <option value="question13">13. Do you agree that the COVID vaccine will strengthen the immune system?</option>
+        <option value="question14">14. Are you willing to vaccinate your elderly and children?</option>
+        <option value="question15">15. If under any COVID-like pandemic, the nation experiences a growing recovery rate, will you agree to take the COVID-19 vaccine?</option>
+        <option value="question16">16. The available vaccines are safe and effective.</option>
+        <option value="question17">17. The COVID vaccine rumors are true.</option>
+        <option value="question18">18. Do you want to volunteer for the clinical trials of new vaccines?</option>
+        <option value="question19">19. Do the side effects of the vaccine resist you from taking the vaccines?</option>
+        <option value="question20">20. Should vaccination be mandatory?</option>
+        <option value="question21">21. Do you believe in the steps taken by the Ministry of Health about the vaccination process?</option>
+        <option value="question22">22. Is the best preventive measure against COVID-19 vaccination?</option>
+        <option value="question23">23. Is vaccination prohibited in your religion?</option>
+        <option value="question24">24. Can eating supplements help prevent coronavirus infection, hence no need for a vaccine?</option>
+        <option value="question25">25. Is COVID-19 not a virus but a bioweapon?</option>
+        <option value="question26">26. Can coronavirus be treated without medication?</option>
+        <option value="question27">27. Does a coronavirus-infected person not need to quarantine themselves?</option>
+        <option value="question28">28. Is the vaccination process a business for the government?</option>
+        <option value="question29">29. Does the use of masks/disinfectants help prevent COVID-19 infection, but still, a vaccine is important?</option>
+        <option value="question30">30. Once a patient recovers from COVID-19, does that mean they do not need vaccination to prevent subsequent infection?</option>
+    </select>
+    <button id="plotPieBtn" class="btn btn-primary mt-3">Plot Pie Chart</button>
+  </div>
+  <div class="d-flex justify-content-center" style="width:600px; height:300px;">
+  <canvas id="pieChart" width="600" height="300"></canvas>
+</div>
+
+  <!-- Export Button -->
+  <button onclick="downloadPDF()" class="btn btn-success mt-4">Export all Graphs as PDF</button>
+</div>
+
+<!-- Chart.js and jsPDF -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  const rawData = JSON.parse('{{ data|escapejs }}');
+  let chartInstance;
+
+  // Function for main chart (bar chart or grouped bar chart)
+  function plotChart(xField, yField) {
+    yField = yField || document.getElementById('y-axis').value;
+    if (yField === 'hesitancy_score') {
+      const groupedData = {};
+      rawData.forEach(item => {
+        const key = item[xField];
+        if (!groupedData[key]) groupedData[key] = [];
+        groupedData[key].push(item.hesitancy_score);
+      });
+      const labels = Object.keys(groupedData);
+      const avgScores = labels.map(label => {
+        const scores = groupedData[label];
+        const sum = scores.reduce((acc, val) => acc + (val || 0), 0);
+        return (sum / scores.length).toFixed(2);
+      });
+      const datasetLabel = 'Average Hesitancy Score';
+      const dataValues = avgScores;
+
+      const ctx = document.getElementById('myChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: datasetLabel,
+            data: dataValues,
+            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: false,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+    } else if (yField === 'predicted_hesitancy') {
+      const groupedData = {};
+      rawData.forEach(item => {
+        const key = item[xField];
+        if (!groupedData[key]) groupedData[key] = {};
+        const category = item.predicted_hesitancy || 'Unknown';
+        groupedData[key][category] = (groupedData[key][category] || 0) + 1;
+      });
+      const labels = Object.keys(groupedData);
+      const categorySet = new Set();
+      Object.values(groupedData).forEach(group => {
+        Object.keys(group).forEach(cat => categorySet.add(cat));
+      });
+      const categories = Array.from(categorySet);
+      const datasets = [];
+      categories.forEach(category => {
+        const dataArr = labels.map(label => groupedData[label][category] || 0);
+        datasets.push({
+          label: category,
+          data: dataArr,
+          backgroundColor: randomColor(),
+          borderWidth: 1
+        });
+      });
+      const ctx = document.getElementById('myChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: datasets
+        },
+        options: {
+          responsive: false,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Utility to generate a random RGBA color
+  function randomColor() {
+    const r = Math.floor(Math.random() * 255);
+    const g = Math.floor(Math.random() * 255);
+    const b = Math.floor(Math.random() * 255);
+    return `rgba(${r}, ${g}, ${b}, 0.7)`;
+  }
+
+  // Initial plot for main chart
+  plotChart('age', document.getElementById('y-axis').value);
+
+  // Update main chart on selection change
+  document.getElementById('x-axis').addEventListener('change', function() {
+    plotChart(this.value, document.getElementById('y-axis').value);
+  });
+  document.getElementById('y-axis').addEventListener('change', function() {
+    plotChart(document.getElementById('x-axis').value, this.value);
+  });
+
+  // Plot Bar Chart for Question vs. Demographic Analysis
+  document.getElementById('plotQuestionBtn').addEventListener('click', function(){
+    const questionField = document.getElementById('questionSelect').value;
+    const demoField = document.getElementById('demographicSelect').value;
+    const grouped = {};
+    rawData.forEach(item => {
+      const key = item[demoField];
+      const answer = item[questionField] || 'No Answer';
+      if (!grouped[key]) grouped[key] = {};
+      grouped[key][answer] = (grouped[key][answer] || 0) + 1;
+    });
+    const labels = Object.keys(grouped);
+    const answerSet = new Set();
+    Object.values(grouped).forEach(group => {
+      Object.keys(group).forEach(ans => answerSet.add(ans));
+    });
+    const answers = Array.from(answerSet);
+    const datasets = [];
+    answers.forEach(ans => {
+      const dataArr = labels.map(label => grouped[label][ans] || 0);
+      datasets.push({
+        label: ans,
+        data: dataArr,
+        backgroundColor: randomColor(),
+        borderWidth: 1
+      });
+    });
+    const ctx = document.getElementById('questionChart').getContext('2d');
+    if (window.questionChartInstance) window.questionChartInstance.destroy();
+    window.questionChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: datasets
+      },
+      options: {
+        responsive: false,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  });
+
+  // Plot Correlation Graph: Scatter Plot of Hesitancy Score vs. Selected Question Answer
+  document.getElementById('plotCorrelationBtn').addEventListener('click', function(){
+    const qField = document.getElementById('corrQuestionSelect').value;
+    const scatterData = [];
+    rawData.forEach(item => {
+      // Survey answers are from 1 to 5
+      const answer = parseFloat(item[qField]);
+      const score = item.hesitancy_score;
+      if (!isNaN(answer) && score !== null) {
+        scatterData.push({ x: answer, y: score });
+      }
+    });
+    const ctx = document.getElementById('correlationChart').getContext('2d');
+    if (window.correlationChartInstance) window.correlationChartInstance.destroy();
+    window.correlationChartInstance = new Chart(ctx, {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'Hesitancy Score vs. Answer',
+          data: scatterData,
+          backgroundColor: 'rgba(54, 162, 235, 0.7)',
+          pointRadius: 6,
+          pointHoverRadius: 8
+        }]
+      },
+      options: {
+        responsive: false,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            type: 'linear',
+            position: 'bottom',
+            min: 1,
+            max: 5,
+            title: { display: true, text: 'Survey Answer (1 to 5)' }
+          },
+          y: {
+            title: { display: true, text: 'Hesitancy Score' },
+            beginAtZero: true,
+            max: 100
+          }
+        }
+      }
+    });
+  });
+
+  // Plot Pie Chart: Distribution of Survey Responses for a Selected Question
+  document.getElementById('plotPieBtn').addEventListener('click', function(){
+    const qField = document.getElementById('pieQuestionSelect').value;
+    const countMap = {};
+    rawData.forEach(item => {
+      const answer = item[qField] || 'No Answer';
+      countMap[answer] = (countMap[answer] || 0) + 1;
+    });
+    const labels = Object.keys(countMap);
+    const dataArr = labels.map(label => countMap[label]);
+    const ctx = document.getElementById('pieChart').getContext('2d');
+    if (window.pieChartInstance) window.pieChartInstance.destroy();
+    window.pieChartInstance = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: dataArr,
+          backgroundColor: labels.map(() => randomColor())
+        }]
+      },
+      options: {
+        responsive: false,
+        maintainAspectRatio: false
+      }
+    });
+  });
+
+  // Updated PDF Export Function: Exports all graphs
+  function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    let yPosition = 10;
+
+    const canvases = [
+      { id: 'myChart', title: 'Main Chart' },
+      { id: 'questionChart', title: 'Question vs. Demographic Bar Chart' },
+      { id: 'correlationChart', title: 'Correlation Scatter Plot' },
+      { id: 'pieChart', title: 'Pie Chart of Survey Responses' }
+    ];
+
+    canvases.forEach((chart, index) => {
+      const canvas = document.getElementById(chart.id);
+      if (canvas) {
+        const image = canvas.toDataURL('image/png', 1.0);
+        pdf.text(chart.title, 10, yPosition);
+        yPosition += 5;
+        pdf.addImage(image, 'PNG', 10, yPosition, 190, 70);
+        yPosition += 80;
+        if (yPosition > 250 && index !== canvases.length - 1) {
+          pdf.addPage();
+          yPosition = 10;
+        }
+      }
+    });
+
+    pdf.save('vaccine_hesitancy_charts.pdf');
+  }
+</script>
+</body>
+</html>
+{% endblock %}

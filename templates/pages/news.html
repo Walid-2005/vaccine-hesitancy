@@ -1,0 +1,45 @@
+{% extends 'base.html' %} 
+{% block content %}
+
+<!-- Breadcrumb -->
+<section id="bc" class="mt-3">
+  <div class="container">
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a>NEWS</a>
+        </li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<!-- Listing -->
+<section id="listing" class="py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9">
+        
+        {% for news_item in news_items %}
+        <!-- News Item -->
+        <div class="row mb-5">
+          <div class="col-md-4">
+            <!-- Image Thumbnail -->
+            <img src="{{ news_item.image.url }}" alt="{{ news_item.title }}" class="img-thumbnail img-fluid">
+          </div>
+          <div class="col-md-8">
+            <!-- Description -->
+            <h4>{{ news_item.title }}</h4>
+            <p>{{ news_item.description|slice:":300" }}{% if news_item.description|length > 300 %}...{% endif %}</p>
+          </div>
+        </div>
+        {% empty %}
+        <p>No news items available.</p>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

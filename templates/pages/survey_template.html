@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        form {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .question-container {
+            margin-bottom: 15px;
+        }
+        .question-container label {
+            font-weight: bold;
+        }
+        .radio-group {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center;">Survey Form</h1>
+
+   <form method="post" action="{% url 'survey' %}">
+        {% csrf_token %}
+
+        <fieldset>
+            <legend><strong>Respondent Information</strong></legend>
+            {% for field in form1 %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                {{ field }}
+                <br><br>
+            {% endfor %}
+        </fieldset>
+
+        <fieldset>
+            <legend><strong>Survey Questions</strong></legend>
+            {% for field in form2 %}
+                <div class="question-container">
+                    <label>{{ field.label }}</label>
+                    <div class="radio-group">
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+        </fieldset>
+
+        <button type="submit">Submit</button>
+    </form>
+
+</body>
+</html>
+{% endblock %}
