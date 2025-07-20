@@ -12,6 +12,7 @@ google-pasta==0.2.0
 grpcio==1.73.1
 h5py==3.14.0
 idna==3.10
+joblib==1.5.1
 keras==3.10.0
 libclang==18.1.1
 Markdown==3.8.2
