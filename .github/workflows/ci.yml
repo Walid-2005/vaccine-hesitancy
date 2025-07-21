@@ -29,7 +29,7 @@ jobs:
       DB_NAME: vaccine_db
       DB_USER: user
       DB_PASSWORD: password
-      DB_HOST: 127.0.0.1
+      DB_HOST: postgres  # This is the key fix
       DB_PORT: 5432
       SECRET_KEY: test-secret-key
 
@@ -46,13 +46,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          until pg_isready -h 127.0.0.1 -p 5432; do
-            echo "Waiting for PostgreSQL..."
-            sleep 1
-          done
 
       - name: Run migrations and tests
         run: |
