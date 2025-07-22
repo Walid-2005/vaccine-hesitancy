@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      db:
-        image: postgres:14
+      postgres:
+        image: postgres:14.10
         env:
           POSTGRES_DB: vaccine_db
           POSTGRES_USER: user
@@ -20,16 +20,16 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U user -d vaccine_db"
+          --health-cmd="pg_isready"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=10
 
     env:
       DB_NAME: vaccine_db
       DB_USER: user
       DB_PASSWORD: pass
-      DB_HOST: db
+      DB_HOST: 127.0.0.1
       DB_PORT: 5432
       SECRET_KEY: test-secret-key
 
@@ -37,22 +37,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name:  Set up Python 3.10
+      - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      - name:  Install dependencies
+      - name: Wait for Postgres
+        run: |
+          until pg_isready -h $DB_HOST -p $DB_PORT; do
+            echo "Waiting for Postgres..."
+            sleep 2
+          done
+
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name:  Print PostgreSQL container logs
-        run: |
-          echo "PostgreSQL container logs:"
-          docker logs $(docker ps -q --filter "ancestor=postgres:14") || true
-
-      - name: 🔄 Run migrations and tests
+      - name: Run migrations and tests
         run: |
           python manage.py migrate
           python manage.py test
