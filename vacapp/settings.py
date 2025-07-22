@@ -58,7 +58,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME', 'vaccine_db'),
-        'USER': os.getenv('DB_USER', 'user'),
+        'USER': os.getenv('DB_USER', 'django_user'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'password'),  # 🔧 FIXED
         'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': os.getenv('DB_PORT', '5432'),

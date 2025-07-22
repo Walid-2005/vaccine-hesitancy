@@ -29,18 +29,6 @@ except Exception as e:
 def predict_hesitancy(request):
     """
     Predict vaccine hesitancy based on the latest submitted survey.
-
-    Steps:
-    - Retrieve the latest user ID from session
-    - Load their response from the database
-    - Preprocess and reorder input features
-    - Apply the same scaler used during training
-    - Make a prediction using the trained model
-    - Store prediction results in the database
-    - Render result page to the user
-
-    Returns:
-        HttpResponse: Rendered HTML page with prediction result
     """
 
     print("📩 Received request for prediction.")
@@ -49,13 +37,13 @@ def predict_hesitancy(request):
     last_user_id = request.session.get('last_user_id')
     if not last_user_id:
         print("❌ No user ID found in session!")
-        return render(request, "error.html", {"message": "No survey data found!"})
+        return render(request, "pages/error.html", {"message": "No survey data found!"})
 
     # Step 2: Fetch the response record from DB
     last_response = Responses.objects.filter(user_id=last_user_id).first()
     if not last_response:
         print("❌ No survey data found!")
-        return render(request, "error.html", {"message": "No survey data found!"})
+        return render(request, "pages/error.html", {"message": "No survey data found!"})
 
     print("✅ Retrieved last survey response from database.")
 
@@ -76,7 +64,7 @@ def predict_hesitancy(request):
         print("✅ Extracted user response.")
     except AttributeError as e:
         print("❌ Error extracting user data:", str(e))
-        return render(request, "error.html", {"message": "User data extraction failed."})
+        return render(request, "pages/error.html", {"message": "User data extraction failed."})
 
     # Step 4: Convert to DataFrame
     response_df = pd.DataFrame([user_response])
@@ -88,7 +76,7 @@ def predict_hesitancy(request):
         print("✅ Preprocessing successful!")
     except Exception as e:
         print("❌ Preprocessing error:", str(e))
-        return render(request, "error.html", {"message": f"Preprocessing error: {str(e)}"})
+        return render(request, "pages/error.html", {"message": f"Preprocessing error: {str(e)}"})
 
     # Step 6: Load expected feature order
     try:
@@ -96,12 +84,12 @@ def predict_hesitancy(request):
         print("✅ Loaded trained feature order.")
     except Exception as e:
         print("❌ Error loading feature order:", str(e))
-        return render(request, "error.html", {"message": "Error loading feature order!"})
+        return render(request, "pages/error.html", {"message": "Error loading feature order!"})
 
     # Step 7: Verify matching dimensions
     if len(feature_order) != processed_input.shape[1]:
         print("❌ Feature order mismatch!")
-        return render(request, "error.html", {"message": "Feature order mismatch after preprocessing!"})
+        return render(request, "pages/error.html", {"message": "Feature order mismatch after preprocessing!"})
 
     # Step 8: Reorder columns and convert to NumPy
     processed_input = processed_input.to_numpy()[:, feature_order]
@@ -113,7 +101,7 @@ def predict_hesitancy(request):
         print("✅ Scaler loaded.")
     except Exception as e:
         print("❌ Error loading scaler:", str(e))
-        return render(request, "error.html", {"message": "Error loading scaler!"})
+        return render(request, "pages/error.html", {"message": "Error loading scaler!"})
 
     # Step 10: Scale the input
     processed_input = scaler.transform(processed_input).reshape(1, -1)
@@ -137,7 +125,7 @@ def predict_hesitancy(request):
 
     except Exception as e:
         print("❌ Model prediction error:", str(e))
-        return render(request, "error.html", {"message": f"Model prediction error: {str(e)}"})
+        return render(request, "pages/error.html", {"message": f"Model prediction error: {str(e)}"})
 
     # Step 13: Return result to frontend
     return render(request, "pages/result.html", {
