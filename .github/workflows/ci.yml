@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
+      db:
         image: postgres:14.10
         env:
           POSTGRES_DB: vaccine_db
@@ -29,7 +29,7 @@ jobs:
       DB_NAME: vaccine_db
       DB_USER: user
       DB_PASSWORD: password
-      DB_HOST: postgres  # This is the key fix
+      DB_HOST: db
       DB_PORT: 5432
       SECRET_KEY: test-secret-key
 
@@ -46,6 +46,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready -h $DB_HOST -p $DB_PORT; do
+            echo "Waiting for Postgres..."; sleep 2;
+          done
 
       - name: Run migrations and tests
         run: |
