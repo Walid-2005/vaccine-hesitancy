@@ -7,7 +7,7 @@ SECRET_KEY = 'django-insecure-nqs2i(3(r4+(j)j@d*wbo%75@0#o%hjv&p2vh8p=(ye7ta+m3l
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'vaccine-hesitancy.onrender.com']
 
 INSTALLED_APPS = [
     'pages.apps.PagesConfig',
