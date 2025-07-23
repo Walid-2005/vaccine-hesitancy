@@ -9,6 +9,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'vaccine-hesitancy.onrender.com']
 
+CSRF_TRUSTED_ORIGINS = ['https://vaccine-hesitancy.onrender.com']
+
 INSTALLED_APPS = [
     'pages.apps.PagesConfig',
     'news.apps.NewsConfig',
