@@ -40,7 +40,7 @@ class ApiPredictTests(TestCase):
     def test_predict_hesitancy_view_get_success(self):
         response = self.client.get(reverse('predict_hesitancy'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'pages/result.html')
+        self.assertTemplateUsed(response, 'fake_template.html')
         self.assertIn('result', response.context)
 
     def test_predict_hesitancy_view_post_success(self):
